@@ -51,7 +51,7 @@ const setup = (canvasApp) => () => {
   canvasApp.renderer.render(canvasApp.stage);
 };
 
-class App extends Component {
+export class App extends Component {
   constructor () {
     super();
 
@@ -76,5 +76,3 @@ class App extends Component {
     );
   }
 }
-
-export default App;
