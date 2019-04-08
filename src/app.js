@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { runGame } from './game/run_game';
+import { Game } from './game/game';
 export class App extends Component {
   constructor () {
     super();
@@ -8,12 +8,14 @@ export class App extends Component {
   }
 
   componentDidMount () {
-    runGame(this.myRefs.current);
+    const game = new Game(this.myRefs.current);
+
+    game.run();
   }
 
   render() {
     return (
-      <div ref={this.myRefs}>
+      <div ref={this.myRefs} style={{width: "100%", height: "100%"}}>
       </div>
     );
   }
