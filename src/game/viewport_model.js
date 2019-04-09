@@ -26,5 +26,9 @@ export class ViewportModel {
                 }
             }
         });
+
+        userEventService.subscribeToZoom((zoomEvent) => {
+            this.scale += zoomEvent.delta > 0 ? -0.01 : 0.01;
+        });
     }
 }

@@ -6,11 +6,6 @@ export const USER_PAN_EVENT_TYPE = {
     END: 'END',
 }
 
-export const USER_ZOOM_EVENT_TYPE = {
-    NEARER: 'NEARER',
-    FARTHER: 'FARTHER',
-}
-
 class UserEventService {
     constructor() {
         // Здесь мы предпологаем что канвас игры будет всегда равен размеру вьюпорта окна.
@@ -44,7 +39,9 @@ class UserEventService {
             this.containerEl.addEventListener('mouseleave', moveEndHandler);
         });
 
-        // TODO zoom
+        this.containerEl.addEventListener('wheel', (e) => {
+            this.triggerZoom(e.deltaY || e.detail || e.wheelDelta, e)
+        });
     }
 
     triggerPan(position, startPosition, panType, originEvent) {
@@ -59,18 +56,17 @@ class UserEventService {
     }
     triggerClick(position, originEvent) {
         for(let i = 0; i < this.clickSubscribers.length; i++) {
-            this.panSubscribers[i]({
+            this.clickSubscribers[i]({
                 originEvent,
                 position,
             });
         }
     }
-    triggerZoom(delta, zoomType, originEvent) {
+    triggerZoom(delta, originEvent) {
         for(let i = 0; i < this.zoomSubscribers.length; i++) {
-            this.panSubscribers[i]({
+            this.zoomSubscribers[i]({
                 originEvent,
                 delta,
-                type: zoomType,
             });
         }
     }
@@ -82,16 +78,16 @@ class UserEventService {
     unsubscribeToPan(callback) {
         // TODO
     }
-    subscribeZoom(callback) {
+    subscribeToZoom(callback) {
         this.zoomSubscribers.push(callback);
     }
-    unsubscribeZoom(callback) {
+    unsubscribeToZoom(callback) {
         // TODO
     }
-    subscribeClick(callback) {
+    subscribeToClick(callback) {
         this.clickSubscribers.push(callback);
     }
-    unsubscribeClick(callback) {
+    unsubscribeToClick(callback) {
         // TODO
     }
 }

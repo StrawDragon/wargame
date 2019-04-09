@@ -65,5 +65,7 @@ export class MapRenderer {
 
         this.pixiContainer.x = this.viewportModel.offset.x;
         this.pixiContainer.y = this.viewportModel.offset.y;
+        this.pixiContainer.scale.x = this.viewportModel.scale;
+        this.pixiContainer.scale.y = this.viewportModel.scale;
     }
 }
