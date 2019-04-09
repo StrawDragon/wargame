@@ -1,4 +1,4 @@
-import {userEventService} from './user_event_service';
+import {userEventService, USER_PAN_EVENT_TYPE} from './user_event_service';
 
 /**
  * Модель отвечающая за манипуляцию с вьюпортом
@@ -9,8 +9,22 @@ export class ViewportModel {
         this.canvasSize = canvasSize;
         this.scale = scale;
 
+        this.startPanOffset = this.offset.clone();
+
         userEventService.subscribeToPan((panEvent) => {
-            this.offset.scalarAdd(1);
+            switch(panEvent.type) {
+                case USER_PAN_EVENT_TYPE.MOVE:
+                case USER_PAN_EVENT_TYPE.END: {
+                    if (this.startPanOffset) {
+                        this.offset.set(panEvent.startPosition).sub(panEvent.position).add(this.startPanOffset);
+                    }
+                    break;
+                }
+                case USER_PAN_EVENT_TYPE.BEGIN: {
+                    this.startPanOffset.set(this.offset);
+                    break;
+                }
+            }
         });
     }
 }
