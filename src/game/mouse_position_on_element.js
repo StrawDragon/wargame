@@ -1,66 +1,76 @@
-import { Vector } from "./vector";
+import Vector from './vector';
 
 // Which HTML element is the target of the event
-function mouseTarget(e) {
-	let targ;
-	if (!e) {
-        e = window.event;
-    }
-	if (e.target) {
-        targ = e.target;
-    }
-	else if (e.srcElement) {
-        targ = e.srcElement;
-    }
-	if (targ.nodeType === 3) {
-        // defeat Safari bug
-        targ = targ.parentNode;
-    }
-	return targ;
+function mouseTarget(event) {
+  let target = {};
+  let myEvent = event;
+
+  if (!myEvent) {
+    myEvent = window.event;
+  }
+
+  const { target: myTarget, srcElement } = myEvent;
+
+  if (myTarget) {
+    target = myTarget;
+  } else if (srcElement) {
+    target = srcElement;
+  }
+  if (target.nodeType === 3) {
+    // defeat Safari bug
+    target = target.parentNode;
+  }
+
+  return target;
 }
- 
+
 // Mouse position relative to the document
 // From http://www.quirksmode.org/js/events_properties.html
 function mousePositionDocument(e) {
-	let posx = 0;
-	let posy = 0;
-	if (!e) {
-		e = window.event;
-	}
-	if (e.pageX || e.pageY) {
-		posx = e.pageX;
-		posy = e.pageY;
-	}
-	else if (e.clientX || e.clientY) {
-		posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-		posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-	}
-	return new Vector(posx, posy);
+  let posX = 0;
+  let posY = 0;
+  let event = e;
+
+  if (!event) {
+    const { event: windowEvent } = window;
+    event = windowEvent;
+  }
+
+  if (event.pageX || event.pageY) {
+    posX = event.pageX;
+    posY = event.pageY;
+  } else if (event.clientX || event.clientY) {
+    posX = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+    posY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+  }
+  return new Vector(posX, posY);
 }
 
 // Find out where an element is on the page
 // From http://www.quirksmode.org/js/findpos.html
-function findPos(obj) {
-    let curleft = 0;
-    let curtop = 0;
-	if (obj.offsetParent) {
-		do {
-			curleft += obj.offsetLeft;
-            curtop += obj.offsetTop;
-            obj = obj.offsetParent
-		} while (obj);
-	}
-	return new Vector(curleft, curtop);
+function findPosition(target) {
+  let currentLeft = 0;
+  let currentTop = 0;
+  let myTarget = { ...target };
+
+  if (myTarget.offsetParent) {
+    do {
+      currentLeft += myTarget.offsetLeft;
+      currentTop += myTarget.offsetTop;
+      myTarget = myTarget.offsetParent;
+    } while (myTarget);
+  }
+  return new Vector(currentLeft, currentTop);
 }
- 
+
 // Mouse position relative to the element
 // not working on IE7 and below
-export function mousePositionOnElement(e) {
-	const mousePosDoc = mousePositionDocument(e);
-	const target = mouseTarget(e);
-    const targetPos = findPos(target);
+export default function mousePositionOnElement(e) {
+  const mousePosDoc = mousePositionDocument(e);
+  const target = mouseTarget(e);
+  const targetPosition = findPosition(target);
 
-    targetPos.sub(mousePosDoc);
+  targetPosition.sub(mousePosDoc);
 
-	return targetPos;
+  return targetPosition;
 }

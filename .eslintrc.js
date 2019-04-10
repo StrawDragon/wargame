@@ -19,5 +19,7 @@ module.exports = {
     'react',
   ],
   rules: {
+    'no-plusplus': ["error", { "allowForLoopAfterthoughts": true }],
+    'max-len': ["error", { "code": 180, "tabWidth": 2 , "ignoreComments": true }, ],
   },
 };

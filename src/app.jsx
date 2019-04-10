@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { Game } from './game/game';
-export class App extends Component {
-  constructor () {
+import Game from './game/game';
+
+export default class App extends Component {
+  constructor() {
     super();
 
     this.myRefs = React.createRef();
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const game = new Game(this.myRefs.current);
 
     game.run();
@@ -15,8 +16,7 @@ export class App extends Component {
 
   render() {
     return (
-      <div ref={this.myRefs} style={{width: "100%", height: "100%"}}>
-      </div>
+      <div ref={this.myRefs} style={{ width: '100%', height: '100%' }} />
     );
   }
 }
