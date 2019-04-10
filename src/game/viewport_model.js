@@ -24,6 +24,8 @@ export class ViewportModel {
                     this.startPanOffset.set(this.offset);
                     break;
                 }
+              default:
+                  break;
             }
         });
 
