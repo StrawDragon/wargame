@@ -1,11 +1,11 @@
-import TILE_TYPE from './tile_type';
+import { TILE_TYPE } from './tile_type';
 /**
  * Класс в задачу которого входит
  * 1) оптимальное хранение карты
  * 2) оптимизированые методы получения информации. Например - только измененые тайлы внутри заданого вьюпорта
  *
  */
-export default class MapModel {
+export class MapModel {
   constructor(size) {
     this.size = size;
     this.data = Array(size.x * size.y).fill(TILE_TYPE.GROUND);

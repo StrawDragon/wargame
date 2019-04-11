@@ -1,4 +1,4 @@
-import Vector from './vector';
+import { Vector } from './vector';
 
 // Which HTML element is the target of the event
 function mouseTarget(event) {
@@ -65,7 +65,7 @@ function findPosition(target) {
 
 // Mouse position relative to the element
 // not working on IE7 and below
-export default function mousePositionOnElement(e) {
+export function mousePositionOnElement(e) {
   const mousePosDoc = mousePositionDocument(e);
   const target = mouseTarget(e);
   const targetPosition = findPosition(target);

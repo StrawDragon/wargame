@@ -1,11 +1,11 @@
 import * as PIXI from 'pixi.js';
-import ViewportModel from './viewport_model';
-import Vector from './vector';
-import MapRenderer from './map/map_renderer';
-import generateMap from './map/generate_map';
-import GROUND_TILESET_URI from './tilesets';
+import { ViewportModel } from './viewport_model';
+import { Vector } from './vector';
+import { MapRenderer } from './map/map_renderer';
+import { generateMap } from './map/generate_map';
+import { GROUND_TILESET_URI } from './tilesets';
 
-export default class Game {
+export class Game {
   constructor(canvasElement) {
     // инициализируем вьюпорт пока с маштабом 1:1 и позицией 0 по отношению к канвасу
     this.viewportModel = new ViewportModel(

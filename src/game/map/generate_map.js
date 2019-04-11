@@ -1,8 +1,8 @@
-import TILE_TYPE from './tile_type';
-import MapModel from './map_model';
-import Vector from '../vector';
+import { TILE_TYPE } from './tile_type';
+import { MapModel } from './map_model';
+import { Vector } from '../vector';
 
-export default function (size) {
+export const generateMap = (size) => {
   const map = new MapModel(size);
 
   for (let y = 0; y < size.y; y++) {
