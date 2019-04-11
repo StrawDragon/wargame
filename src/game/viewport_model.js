@@ -33,7 +33,14 @@ export class ViewportModel {
     });
 
     userEventService.subscribeToZoom((zoomEvent) => {
-      this.scale += zoomEvent.delta > 0 ? -0.01 : 0.01;
+      const deltaScale = zoomEvent.delta > 0 ? -0.01 : 0.01;
+      const deltaOffset = this.offset.clone();
+
+      deltaOffset.add(this.canvasSize);
+      deltaOffset.scalarMul(deltaScale / 2);
+
+      this.scale += deltaScale;
+      this.offset.sub(deltaOffset);
     });
   }
 }
