@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Game from './game/game';
+import { Game } from './game/game';
 
-export default class App extends Component {
+export class App extends Component {
   constructor() {
     super();
 

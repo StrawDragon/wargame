@@ -1,4 +1,4 @@
-import mousePositionOnElement from './mouse_position_on_element';
+import { mousePositionOnElement } from './mouse_position_on_element';
 
 export const USER_PAN_EVENT_TYPE = {
   BEGIN: 'BEGIN',

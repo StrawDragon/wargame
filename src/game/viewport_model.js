@@ -4,7 +4,7 @@ import { userEventService, USER_PAN_EVENT_TYPE } from './user_event_service';
  * Модель отвечающая за манипуляцию с вьюпортом
  */
 
-export default class ViewportModel {
+export class ViewportModel {
   constructor(offset, canvasSize, scale) {
     this.offset = offset;
     this.canvasSize = canvasSize;

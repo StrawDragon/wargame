@@ -7,7 +7,7 @@
 
 // TODO: Сейчас не используется. Доделать систему change detection
 // TODO: Нужен ли вообще?
-export default class ChangeDetectable {
+export class ChangeDetectable {
   constructor(ticker) {
     this.ticker = ticker;
     this.updateChangeDetection(ticker);

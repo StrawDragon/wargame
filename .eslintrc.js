@@ -21,5 +21,8 @@ module.exports = {
   rules: {
     'no-plusplus': ["error", { "allowForLoopAfterthoughts": true }],
     'max-len': ["error", { "code": 180, "tabWidth": 2 , "ignoreComments": true }, ],
+    'import/no-default-export': 2,
+    'import/prefer-default-export': 0,
+    'comma-style': ["error", "last"],
   },
 };

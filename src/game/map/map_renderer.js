@@ -1,8 +1,8 @@
 import * as PIXI from 'pixi.js';
-import Rect from '../rect';
-import Vector from '../vector';
-import GROUND_TILESET_URI from '../tilesets';
-import TILE_TYPE from './tile_type';
+import { Rect } from '../rect';
+import { Vector } from '../vector';
+import { GROUND_TILESET_URI } from '../tilesets';
+import { TILE_TYPE } from './tile_type';
 
 // TODO: Пока не придумал куда приткнуть или от куда брать размер тайла
 // Поэтому пока здесь
@@ -17,7 +17,7 @@ const TILE_SIZE = 64;
  *  3) Не отвечает за отлов и обработку событий, только визуализация карты
  *  4) Минимум модификаций в пикси
  */
-export default class MapRenderer {
+export class MapRenderer {
   constructor(pixiContainer, mapModel, viewportModel) {
     this.pixiContainer = pixiContainer;
     this.mapModel = mapModel;
