@@ -24,5 +24,6 @@ module.exports = {
     'import/no-default-export': 2,
     'import/prefer-default-export': 0,
     'comma-style': ["error", "last"],
+    'no-param-reassign': ["error", { "props": false }],
   },
 };
