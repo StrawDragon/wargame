@@ -1,4 +1,4 @@
-import { TILE_TYPE } from './tile_type';
+import { TILE_TYPE as SURFACE_TYPE } from './tile_type';
 /**
  * Класс в задачу которого входит
  * 1) оптимальное хранение карты
@@ -8,7 +8,8 @@ import { TILE_TYPE } from './tile_type';
 export class MapModel {
   constructor(size) {
     this.size = size;
-    this.data = Array(size.x * size.y).fill(TILE_TYPE.GROUND);
+    this.surface = Array(size.x * size.y).fill(SURFACE_TYPE.GROUND);
+    this.units = [];
   }
 
   get tilesCount() {
@@ -23,19 +24,11 @@ export class MapModel {
     return this.size.height;
   }
 
-  setTile(x, y, tileType) {
-    this.data[x + y * this.size.x] = tileType;
+  setSurfaceTile(x, y, tile) {
+    this.surface[x + y * this.size.x] = tile;
   }
 
-  getTile(x, y) {
-    return this.data[x + y * this.size.x];
-  }
-
-  setTileByIndex(index, tileType) {
-    this.data[index] = tileType;
-  }
-
-  getTileByIndex(index) {
-    return this.data[index];
+  getSurfaceTile(x, y) {
+    return this.surface[x + y * this.size.x];
   }
 }

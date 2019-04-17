@@ -11,6 +11,7 @@ export class App extends Component {
   componentDidMount() {
     const game = new Game(this.myRefs.current);
 
+    // noinspection JSIgnoredPromiseFromCall
     game.run();
   }
 

@@ -8,6 +8,9 @@ import { TILE_TYPE } from './tile_type';
 // Поэтому пока здесь
 const TILE_SIZE = 64;
 
+const SURFACE_ZINDEX = 0;
+const UNITS_ZINDEX = 1;
+
 /**
  * Класс отвечающий за отрисовку игровой карты - сетки, тайлов, юнитов, зданий итд.
  * Все что зумится и панится относится к нему.
@@ -22,6 +25,7 @@ export class MapRenderer {
     this.pixiContainer = pixiContainer;
     this.mapModel = mapModel;
     this.viewportModel = viewportModel;
+
     // Заранее создаем спрайты карты размером  40x40 - считая что при максимальном зуме больше мы не увидем
     // В будущем возможно динамическое, асинхроное изменение количества рисуемых спрайтов в зависимости от состояния вьюпорта
     // Однако нужно учесть что добавление или удаление тайлов крайне затратная по памяти операция
@@ -34,9 +38,23 @@ export class MapRenderer {
       this.pixiContainer.addChild(sprite);
       this.pixiTilesCache[i] = sprite;
     }
+    this.pixiUnitsCache = new Map();
   }
 
-  render() {
+  render(tick) {
+    this.renderViewport();
+    this.renderSurface();
+    this.renderUnits(tick);
+  }
+
+  renderViewport() {
+    this.pixiContainer.x = this.viewportModel.offset.x;
+    this.pixiContainer.y = this.viewportModel.offset.y;
+    this.pixiContainer.scale.x = this.viewportModel.scale;
+    this.pixiContainer.scale.y = this.viewportModel.scale;
+  }
+
+  renderSurface() {
     // кешенуть бы эту страсть
     const viewTilesRect = new Rect(
       new Vector(
@@ -57,15 +75,42 @@ export class MapRenderer {
         index = 40 * y + x;
         this.pixiTilesCache[index].x = x * TILE_SIZE;
         this.pixiTilesCache[index].y = y * TILE_SIZE;
-        this.pixiTilesCache[index].texture = this.mapModel.data[y * this.mapModel.width + x].type === TILE_TYPE.GROUND
+        this.pixiTilesCache[index].zIndex = SURFACE_ZINDEX;
+        this.pixiTilesCache[index].texture = this.mapModel.surface[y * this.mapModel.width + x].type === TILE_TYPE.GROUND
           ? PIXI.loader.resources[GROUND_TILESET_URI].textures['ground_tileset-0.png']
           : PIXI.loader.resources[GROUND_TILESET_URI].textures['ground_tileset-17.png'];
       }
     }
+  }
 
-    this.pixiContainer.x = this.viewportModel.offset.x;
-    this.pixiContainer.y = this.viewportModel.offset.y;
-    this.pixiContainer.scale.x = this.viewportModel.scale;
-    this.pixiContainer.scale.y = this.viewportModel.scale;
+  renderUnits(tick) {
+    const unitsToRender = this.mapModel.units;
+
+    for (let i = 0; i < unitsToRender.length; i++) {
+      const unit = unitsToRender[i];
+
+      // Если в кеше нет пикси то создаем
+      if (!this.pixiUnitsCache.has(unit)) {
+        const pixi = unit.renderer.createPixi();
+        this.pixiUnitsCache.set(unit, { pixi, tick, unit });
+        this.pixiContainer.addChild(pixi);
+      }
+
+      unit.renderer.renderPixi(unit, this.pixiUnitsCache.get(unit).pixi, TILE_SIZE, UNITS_ZINDEX);
+      this.pixiUnitsCache.get(unit).tick = tick;
+    }
+
+    // Если в кеше нет пикси которые отрисовывались - удаляем их
+    // Например при удалении из модели юнита он должен быть удален и из рендера
+    // В будущем это станет так же частью виртуализации
+    //
+    // что за хрень, почему я не могу пользоваться for of ?
+    // eslint-disable-next-line no-restricted-syntax
+    for (const cacheItem of this.pixiUnitsCache) {
+      if (cacheItem.tick !== tick) {
+        this.pixiContainer.removeChild(cacheItem.pixi);
+        this.pixiUnitsCache.delete(cacheItem.unit);
+      }
+    }
   }
 }
