@@ -11,9 +11,8 @@ export class ViewportModel {
     this.scale = scale;
 
     this.startPanOffset = this.offset.clone();
+    this.focusOnMapPoint = this.focusOnMapPoint.bind(this);
 
-    // TODO: Мне не нравиться что эти подписки и их логика здесь. Нужно вынести и управлять моделью из вне.
-    // Возможно нужна привязка к game loop'у
     userEventService.subscribeToPan((panEvent) => {
       switch (panEvent.type) {
         case USER_PAN_EVENT_TYPE.MOVE:
@@ -34,11 +33,18 @@ export class ViewportModel {
 
     userEventService.subscribeToZoom((zoomEvent) => {
       const deltaScale = zoomEvent.delta > 0 ? -0.01 : 0.01;
-      const deltaOffset = this.canvasSize.clone();
-      deltaOffset.scalarMul(deltaScale / -2);
+      const viewCenter = this.canvasSize.clone().scalarMul(0.5);
+      const target = this.offset.clone().sub(viewCenter).scalarMul(1 / this.scale);
 
       this.scale += deltaScale;
-      this.offset.add(deltaOffset);
+      this.focusOnMapPoint(target);
     });
+  }
+
+  focusOnMapPoint(vector) {
+    const viewCenter = this.canvasSize.clone().scalarMul(0.5);
+    const target = vector.clone().scalarMul(this.scale).sub(viewCenter);
+
+    this.offset.set(target);
   }
 }
